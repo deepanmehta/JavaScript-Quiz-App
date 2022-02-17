@@ -6,11 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="styles.css" rel="stylesheet">
   <script defer src="script.js"></script>
-  <title>Word Quiz</title>
+  <title>Vocab Divergence Quiz</title>
 </head>
-
 <body>
-  <div class="container">
+<header>
+	<div><b>Vocab Divergence Quiz</b></div>
+</header>
+
+<section>
+<div id="result-overlay">Find out how British/American/Male/Female your vocabulary is!</div>
+</section>
+  
+ <div class="container">
     <div id="question-container" class="hide">
       <div id="question">Question</div>
       <div id="answer-buttons" class="btn-grid">
@@ -25,6 +32,10 @@
       <button id="next-btn" class="next-btn btn hide">Next</button>
     </div>
   </div>
+
+	<footer>
+		<p>(Loosely based on the results of <a href="https://link.springer.com/article/10.3758/s13428-018-1077-9">this study.)</p>
+	</footer>
 
   
 </body>

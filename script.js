@@ -3,43 +3,22 @@ const nextButton = document.getElementById('next-btn')
 const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerButtonsElement = document.getElementById('answer-buttons')
+const resultOverlay = document.getElementById('result-overlay')
 
-let shuffledQuestions, currentQuestionIndex, usScore, ukScore, mScore, fScore, usTotal, ukTotal, mTotal, fTotal
+let someShuffledWords, currentWordIndex, usScore, ukScore, mScore, fScore, usTotal, ukTotal, mTotal, fTotal
 
 startButton.addEventListener('click', startGame)
 nextButton.addEventListener('click', () => {
-  currentQuestionIndex++
+  currentWordIndex++
   setNextQuestion()
 })
 
-function getScores() {
-    return [
-      { us: parseFloat((usScore/usTotal*100) || 0).toFixed(1)+"%"},
-      { uk: parseFloat((ukScore/ukTotal*100) || 0).toFixed(1)+"%"},
-      { male: parseFloat((mScore/mTotal*100) || 0).toFixed(1)+"%"},
-      { female: parseFloat((fScore/fTotal*100) || 0).toFixed(1)+"%"}
-  ];
-}
-
-function addToTotals() {
-  usTotal = usTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].US) || 0)
-  ukTotal = ukTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].UK) || 0)
-  mTotal = mTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].Male) || 0)
-  fTotal = fTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].Female) || 0)
-}
-
-function upScores() {
-    usScore = usScore + (parseFloat(shuffledQuestions[currentQuestionIndex].US) || 0)
-    ukScore = ukScore + (parseFloat(shuffledQuestions[currentQuestionIndex].UK) || 0)
-    mScore = mScore + (parseFloat(shuffledQuestions[currentQuestionIndex].Male) || 0)
-    fScore = fScore + (parseFloat(shuffledQuestions[currentQuestionIndex].Female) || 0)
-}
-
 function startGame() {
   startButton.classList.add('hide')
-  totalWordsPerRound = 10
-  shuffledQuestions = words.sort(() => Math.random() - .5).slice(0, totalWordsPerRound-1)
-  currentQuestionIndex = 0
+  totalWordsPerRound = 20
+  shuffledWords = words.sort(() => Math.random() - .5)
+  someShuffledWords = shuffledWords.slice(0, totalWordsPerRound-1)
+  currentWordIndex = 0
   usScore = 0
   usTotal = 0
   ukScore = 0
@@ -54,18 +33,30 @@ function startGame() {
 
 function setNextQuestion() {
   resetState()
-  showQuestion(shuffledQuestions[currentQuestionIndex])
+  showQuestion(someShuffledWords[currentWordIndex])
 }
+
+
+function getNewDefIndex(lengthOfArray,indexToExclude){
+  var rand = null;  //an integer
+    while(rand === null || rand === indexToExclude){
+       rand = Math.round(Math.random() * (lengthOfArray - 1));
+    }
+  return rand;
+}
+
 
 function genDefinitions(word) {
     return [
               { text: word.Definition, correct: true },
-              { text: words[Math.floor(Math.random() * (words.length-1))].Definition, correct: false },
-              { text: words[Math.floor(Math.random() * (words.length-1))].Definition, correct: false}
+              { text: shuffledWords[getNewDefIndex(shuffledWords.length,currentWordIndex)].Definition, correct: false },
+              { text: shuffledWords[getNewDefIndex(shuffledWords.length,currentWordIndex)].Definition, correct: false}
   ].sort(() => Math.random() - .5);
 }
 
 function showQuestion(question) {
+/*  if (typeof(question.Word) == "undefined") {question = shuffledWords[offsetRandom(0,shuffledWords.length)]}
+*/    
   questionElement.innerText = question.Word
   genDefinitions(question).forEach(definitions => {
     const button = document.createElement('button')
@@ -80,7 +71,6 @@ function showQuestion(question) {
 }
 
 function resetState() {
-  console.log(getScores())
   clearStatusClass(document.body)
   nextButton.classList.add('hide')
   while (answerButtonsElement.firstChild) {
@@ -99,10 +89,11 @@ function selectAnswer(e) {
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
-  if (shuffledQuestions.length > currentQuestionIndex + 1) {
+  if (someShuffledWords.length > currentWordIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
-    console.log(getScores())
+    scores = getScores()
+    resultOverlay.innerHTML = (`Your vocabulary is ${scores[0]} American, ${scores[1]} British, ${scores[2]} masculine, and ${scores[3]} feminine!`);
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
   }
@@ -120,6 +111,37 @@ function setStatusClass(element, correct) {
 function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
+}
+ /*
+function getScores() {
+    return [
+      { "us": parseFloat((usScore/usTotal*100) || 0).toFixed(1)+"%"},
+      { "uk": parseFloat((ukScore/ukTotal*100) || 0).toFixed(1)+"%"},
+      { "male": parseFloat((mScore/mTotal*100) || 0).toFixed(1)+"%"},
+      { "female": parseFloat((fScore/fTotal*100) || 0).toFixed(1)+"%"}
+  ];
+}
+*/
+function getScores() {
+    return [parseFloat((usScore/usTotal*100) || 0).toFixed(1)+"%",
+            parseFloat((ukScore/ukTotal*100) || 0).toFixed(1)+"%",
+            parseFloat((mScore/mTotal*100) || 0).toFixed(1)+"%", 
+            parseFloat((fScore/fTotal*100) || 0).toFixed(1)+"%"
+  ];
+}
+
+function addToTotals() {
+  usTotal = usTotal + (parseFloat(someShuffledWords[currentWordIndex].US) || 0)
+  ukTotal = ukTotal + (parseFloat(someShuffledWords[currentWordIndex].UK) || 0)
+  mTotal = mTotal + (parseFloat(someShuffledWords[currentWordIndex].Male) || 0)
+  fTotal = fTotal + (parseFloat(someShuffledWords[currentWordIndex].Female) || 0)
+}
+
+function upScores() {
+    usScore = usScore + (parseFloat(someShuffledWords[currentWordIndex].US) || 0)
+    ukScore = ukScore + (parseFloat(someShuffledWords[currentWordIndex].UK) || 0)
+    mScore = mScore + (parseFloat(someShuffledWords[currentWordIndex].Male) || 0)
+    fScore = fScore + (parseFloat(someShuffledWords[currentWordIndex].Female) || 0)
 }
 
 const words = [

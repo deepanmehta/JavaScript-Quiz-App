@@ -1,6 +1,6 @@
 *, *::before, *::after {
   box-sizing: border-box;
-  font-family: Grotesk Regular;
+  font-family: "Lucida Console", "Courier New", monospace;
 }
 
 :root {
@@ -9,33 +9,52 @@
   --hue-correct: 145;
 }
 
+header {
+  background: ##FFFFFF;
+  padding: 20px 30px;
+  margin: auto;
+
+  font-size: 2rem;
+  text-align: center;
+  color: black;
+  display:block;
+}
+
+section {
+  margin: auto;
+
+  padding: 10px 10px;
+  font-size: 1rem;
+  text-align: center;
+  color: black;
+  font-weight: 100;
+}
+
 body {
-  --hue: var(--hue-neutral);
-  padding: 0;
   margin: 0;
-  display: flex;
   width: 100vw;
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background-color: hsl(var(--hue), 100%, 20%);
+  background: #FFFFFF;
 }
 
-body.correct {
-  --hue: var(--hue-neutral);
-}
-
-body.wrong {
-  --hue: var(--hue-neutral);
+footer {
+	margin: auto;
+  height: 10%;
+  text-align: center;
+  color: #black;
 }
 
 .container {
-  width: 800px;
+/*  width: 800px;
   max-width: 80%;
-  background-color: white;
   border-radius: 5px;
-  padding: 10px;
   box-shadow: 0 0 10px 2px;
+*/
+  height: 70%;
+  padding: 20px;
+  background-color: #FFFFFF;
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
@@ -52,11 +71,11 @@ body.wrong {
 
 .btn {
   --hue: var(--hue-neutral);
-  border: 2px solid hsl(var(--hue), 100%, 30%);
-  background-color: hsl(var(--hue), 100%, 50%);
+  border: 2px solid #13292A;
+  background-color: #13292A;
   border-radius: 5px;
   padding: 5px 10px;
-  color: white;
+  color: #FFFFFF;
   outline: none;
   font-size: 1.25rem;
 }
@@ -68,11 +87,14 @@ body.wrong {
 
 .btn.correct {
   --hue: var(--hue-correct);
-  color: black;
+  background-color: #04D9C4;
+  border-color: #04D9C4;
 }
 
 .btn.wrong {
   --hue: var(--hue-wrong);
+  background-color: #F20519;
+  border-color: #F20519;
 }
 
 
