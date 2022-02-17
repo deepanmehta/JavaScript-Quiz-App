@@ -41,7 +41,6 @@ body {
 
 footer {
 	margin: auto;
-  height: 10%;
   text-align: center;
   color: #black;
 }
@@ -51,8 +50,9 @@ footer {
   max-width: 80%;
   border-radius: 5px;
   box-shadow: 0 0 10px 2px;
-*/
   height: 70%;
+*/
+
   padding: 20px;
   background-color: #FFFFFF;
   font-size: 2rem;

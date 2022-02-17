@@ -17,7 +17,7 @@ function startGame() {
   startButton.classList.add('hide')
   totalWordsPerRound = 20
   shuffledWords = words.sort(() => Math.random() - .5)
-  someShuffledWords = shuffledWords.slice(0, totalWordsPerRound-1)
+  someShuffledWords = shuffledWords.slice(0, totalWordsPerRound)
   currentWordIndex = 0
   usScore = 0
   usTotal = 0
@@ -55,9 +55,9 @@ function genDefinitions(word) {
 }
 
 function showQuestion(question) {
-/*  if (typeof(question.Word) == "undefined") {question = shuffledWords[offsetRandom(0,shuffledWords.length)]}
-*/    
-  questionElement.innerText = question.Word
+  console.log(question.Word)
+  if (typeof question.Word == "undefined") {question = shuffledWords[getNewDefIndex(shuffledWords.length,currentWordIndex)]}    
+  questionElement.innerText = (`${currentWordIndex+1}/${totalWordsPerRound}: ${question.Word}`)
   genDefinitions(question).forEach(definitions => {
     const button = document.createElement('button')
     button.innerText = definitions.text
@@ -112,16 +112,7 @@ function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
 }
- /*
-function getScores() {
-    return [
-      { "us": parseFloat((usScore/usTotal*100) || 0).toFixed(1)+"%"},
-      { "uk": parseFloat((ukScore/ukTotal*100) || 0).toFixed(1)+"%"},
-      { "male": parseFloat((mScore/mTotal*100) || 0).toFixed(1)+"%"},
-      { "female": parseFloat((fScore/fTotal*100) || 0).toFixed(1)+"%"}
-  ];
-}
-*/
+
 function getScores() {
     return [parseFloat((usScore/usTotal*100) || 0).toFixed(1)+"%",
             parseFloat((ukScore/ukTotal*100) || 0).toFixed(1)+"%",
@@ -785,7 +776,4 @@ const words = [
     Female: "0.68",
     Definition: "a light semitransparent fabric"
   },
-  {
-    Word: ""
-  }
 ]
