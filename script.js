@@ -4,7 +4,7 @@ const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerButtonsElement = document.getElementById('answer-buttons')
 
-let shuffledQuestions, currentQuestionIndex
+let shuffledQuestions, currentQuestionIndex, usScore, ukScore, mScore, fScore, usTotal, ukTotal, mTotal, fTotal
 
 startButton.addEventListener('click', startGame)
 nextButton.addEventListener('click', () => {
@@ -12,10 +12,42 @@ nextButton.addEventListener('click', () => {
   setNextQuestion()
 })
 
+function getScores() {
+    return [
+      { us: parseFloat((usScore/usTotal*100) || 0).toFixed(1)+"%"},
+      { uk: parseFloat((ukScore/ukTotal*100) || 0).toFixed(1)+"%"},
+      { male: parseFloat((mScore/mTotal*100) || 0).toFixed(1)+"%"},
+      { female: parseFloat((fScore/fTotal*100) || 0).toFixed(1)+"%"}
+  ];
+}
+
+function addToTotals() {
+  usTotal = usTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].US) || 0)
+  ukTotal = ukTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].UK) || 0)
+  mTotal = mTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].Male) || 0)
+  fTotal = fTotal + (parseFloat(shuffledQuestions[currentQuestionIndex].Female) || 0)
+}
+
+function upScores() {
+    usScore = usScore + (parseFloat(shuffledQuestions[currentQuestionIndex].US) || 0)
+    ukScore = ukScore + (parseFloat(shuffledQuestions[currentQuestionIndex].UK) || 0)
+    mScore = mScore + (parseFloat(shuffledQuestions[currentQuestionIndex].Male) || 0)
+    fScore = fScore + (parseFloat(shuffledQuestions[currentQuestionIndex].Female) || 0)
+}
+
 function startGame() {
   startButton.classList.add('hide')
-  shuffledQuestions = words.sort(() => Math.random() - .5).slice(0, 19)
+  totalWordsPerRound = 10
+  shuffledQuestions = words.sort(() => Math.random() - .5).slice(0, totalWordsPerRound-1)
   currentQuestionIndex = 0
+  usScore = 0
+  usTotal = 0
+  ukScore = 0
+  ukTotal = 0
+  mScore = 0
+  mTotal = 0
+  fScore = 0
+  fTotal= 0
   questionContainerElement.classList.remove('hide')
   setNextQuestion()
 }
@@ -28,8 +60,8 @@ function setNextQuestion() {
 function genDefinitions(word) {
     return [
               { text: word.Definition, correct: true },
-              { text: words[Math.floor(Math.random() * words.length)].Definition, correct: false },
-              { text: words[Math.floor(Math.random() * words.length)].Definition, correct: false}
+              { text: words[Math.floor(Math.random() * (words.length-1))].Definition, correct: false },
+              { text: words[Math.floor(Math.random() * (words.length-1))].Definition, correct: false}
   ].sort(() => Math.random() - .5);
 }
 
@@ -48,6 +80,7 @@ function showQuestion(question) {
 }
 
 function resetState() {
+  console.log(getScores())
   clearStatusClass(document.body)
   nextButton.classList.add('hide')
   while (answerButtonsElement.firstChild) {
@@ -55,16 +88,21 @@ function resetState() {
   }
 }
 
+
 function selectAnswer(e) {
+  addToTotals()
+  //if eupScores()
   const selectedButton = e.target
   const correct = selectedButton.dataset.correct
   setStatusClass(document.body, correct)
+  if (correct) upScores();
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
+    console.log(getScores())
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
   }
@@ -83,43 +121,6 @@ function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
 }
-
-const questions = [
-  {
-    question: 'What is 2 + 2?',
-    answers: [
-      { text: '4', correct: true },
-      { text: '22', correct: false }
-    ]
-  },
-  {
-    question: 'Who is the best YouTuber?',
-    answers: [
-      { text: 'Web Dev Simplified', correct: true },
-      { text: 'Traversy Media', correct: true },
-      { text: 'Dev Ed', correct: true },
-      { text: 'Fun Fun Function', correct: true }
-    ]
-  },
-  {
-    question: 'Is web development fun?',
-    answers: [
-      { text: 'Kinda', correct: false },
-      { text: 'YES!!!', correct: true },
-      { text: 'Um no', correct: false },
-      { text: 'IDK', correct: false }
-    ]
-  },
-  {
-    question: 'What is 4 * 2?',
-    answers: [
-      { text: '6', correct: false },
-      { text: '8', correct: true }
-    ]
-  }
-]
-
-
 
 const words = [
   {
