@@ -36,21 +36,21 @@ function setNextQuestion() {
   showQuestion(someShuffledWords[currentWordIndex])
 }
 
-
-function getNewDefIndex(lengthOfArray,indexToExclude){
-  var rand = null;  //an integer
-    while(rand === null || rand === indexToExclude){
-       rand = Math.round(Math.random() * (lengthOfArray - 1));
+function getNewDefIndex(originalArray,arrayOfIndexesToExclude){
+   var rand = null;
+   while(rand === null || arrayOfIndexesToExclude.includes(rand)){
+         rand = Math.round(Math.random() * (originalArray.length - 1));
     }
-  return rand;
+     return rand;
 }
 
-
 function genDefinitions(word) {
-    return [
+  wrong1 = getNewDefIndex(shuffledWords,[currentWordIndex])
+  wrong2 = getNewDefIndex(shuffledWords,[currentWordIndex,wrong1])
+  return [
               { text: word.Definition, correct: true },
-              { text: shuffledWords[getNewDefIndex(shuffledWords.length,currentWordIndex)].Definition, correct: false },
-              { text: shuffledWords[getNewDefIndex(shuffledWords.length,currentWordIndex)].Definition, correct: false}
+              { text: shuffledWords[wrong1].Definition, correct: false },
+              { text: shuffledWords[wrong2].Definition, correct: false}
   ].sort(() => Math.random() - .5);
 }
 
@@ -94,7 +94,7 @@ function selectAnswer(e) {
   } else {
     scores = getScores()
     resultOverlay.innerHTML = (`Your vocabulary is ${scores[0]} American, ${scores[1]} British, ${scores[2]} masculine, and ${scores[3]} feminine!`);
-    startButton.innerText = 'Restart'
+    startButton.innerText = 'Try Again'
     startButton.classList.remove('hide')
   }
 }
@@ -177,7 +177,7 @@ const words = [
     Definition: "cubes of meat marinated and cooked on a skewer usually with vegetables"
   },
   {
-    Word: "kwanza",
+    Word: "kwanzaa",
     US: "0.9",
     UK: "",
     Male: "",
